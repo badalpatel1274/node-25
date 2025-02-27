@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
-
-const userSchema = mongoose.Schema({
+// const Schema = mongoose.Schema()
+const userSchema =  mongoose.Schema({
 
         
     firstName:{
@@ -13,8 +13,13 @@ const userSchema = mongoose.Schema({
         type:Number
     },
     status:{
-        tpye:Boolean
+        type:Boolean
+    },
+    roleId:{
+        type:mongoose.Schema.Types.ObjectId,     
+        ref:"roles"
     }
+
 
 
 

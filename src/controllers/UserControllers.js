@@ -11,7 +11,8 @@ const addUser = async(req,res)=>{
 }
 
 const getUser = async(req,res)=>{
-    const savedUser = await userModel.find()
+    const savedUser =  await userModel.find().populate("roleId", "roleName -_id")
+
     res.json({
         message:"all the Users are fetched !",
         data:savedUser
