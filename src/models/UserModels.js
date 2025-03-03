@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const userSchema =  mongoose.Schema({
 
         
-    firstName:{
+    username:{
         type:String
     },
     lastName:{
@@ -18,6 +18,13 @@ const userSchema =  mongoose.Schema({
     roleId:{
         type:mongoose.Schema.Types.ObjectId,     
         ref:"roles"
+    },
+    email:{
+        type:String,
+        unique:true
+    },
+    password:{
+        type:String
     }
 
 
