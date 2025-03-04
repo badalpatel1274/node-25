@@ -25,7 +25,10 @@ app.use(userRoutes)
 const templateRoutes = require('./src/routes/TemplateRoutes')
 app.use('/template',templateRoutes)
 
+//forms route
 
+const formRoutes = require('./src/routes/FormRoutes')
+app.use('/form',formRoutes)
 app.listen(PORT , ()=>{
     console.log(`server is started on localhost:${PORT}`)
 })
