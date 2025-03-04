@@ -20,6 +20,12 @@ app.use(roleRoutes)
 const userRoutes = require('./src/routes/UserRoutes')
 app.use(userRoutes)
 
+
+// template route
+const templateRoutes = require('./src/routes/TemplateRoutes')
+app.use('/template',templateRoutes)
+
+
 app.listen(PORT , ()=>{
     console.log(`server is started on localhost:${PORT}`)
 })

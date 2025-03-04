@@ -6,15 +6,11 @@ const userSchema =  mongoose.Schema({
     username:{
         type:String
     },
-    lastName:{
-        type:String
-    },
+
     age:{
         type:Number
     },
-    status:{
-        type:Boolean
-    },
+
     roleId:{
         type:mongoose.Schema.Types.ObjectId,     
         ref:"roles"
@@ -30,5 +26,5 @@ const userSchema =  mongoose.Schema({
 
 
 
-})
+},{timestamp:true})
 module.exports =mongoose.model("User" , userSchema)
