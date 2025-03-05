@@ -8,18 +8,21 @@ const formSchema = new Schema({
             ref:"User",
             required:true
         },
-        personal_info:{
+        personal:{
             fullName:{
                 type:String,
-                required:true
+                // required:true
             },
             email:{
                 type:String,
-                required:true
+                // required:true
+            },
+            birthDate:{
+                type:String,
             },
             phone:{
                 type:Number,
-                required:true
+                // required:true
             },
             address:{
                 type:String,
@@ -33,15 +36,15 @@ const formSchema = new Schema({
         education:[{
             degree:{
                 type:String,
-                required:true
+                // required:true
             },
             university:{
                 type:String,
-                required:true
+                // required:true
             },
             year_of_passing:{
                 type:Number,
-                required:true
+                // required:true
             },
             cgpa:{
                 type:Number,
@@ -51,74 +54,86 @@ const formSchema = new Schema({
 
         experience:[
             {
-                job_title:{
+                jobtTitle:{
                     type:String,
-                    required:true
+                    // required:true
                 },
                 
-                company_name:{
+                companyName:{
                     type:String,
                     
                 },
-                duration:{
+                year:{
                     type:String,
+                },
+                projectTitle:{
+                    type:String
+                },
+                projectDescription:{
+                    type:String
                 }
             }
         ],
 
         skills:
             {
-                technical_skills:{
+                technical:{
                     type:[String],
                     required:true
                 },
                 
-                soft_skills:{
+                soft:{
                     type:[String],
                     required:true
+                },
+                language:{
+                    type:[String],
+                },
+                interests:{
+                    type:[String],
                 }
             },
 
-        certificates:{
-                title:{
-                    type:String,
+        // certificates:{
+        //         title:{
+        //             type:String,
                     
-                },
-                platform:{
-                    type:String,
-                },
-                year:{
-                    type:Number,
-                }
-        },
+        //         },
+        //         platform:{
+        //             type:String,
+        //         },
+        //         year:{
+        //             type:Number,
+        //         }
+        // },
         
-        projects:[{
+        // projects:[{
 
-            title:{
-                type:String,
+        //     title:{
+        //         type:String,
                
-            },
-            description:{
-                type:String,
+        //     },
+        //     description:{
+        //         type:String,
                 
-            },
-            technologies_used:{
-                type:[String],
+        //     },
+        //     technologies_used:{
+        //         type:[String],
                 
-            },
-            github_link:{
-                type:String,
+        //     },
+        //     github_link:{
+        //         type:String,
                 
-            }
-        }],
+        //     }
+        // }],
 
-        interests:{
-            type:[String]
-        },
+        // interests:{
+        //     type:[String]
+        // },
 
-        language:{
-            type:[String]
-        },
+        // language:{
+        //     type:[String]
+        // },
 
         additional_info:{
             type:String,

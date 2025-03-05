@@ -8,7 +8,7 @@ const addFormDetails = async (req, res) => {
                 data: savedInfo
             })
         } catch (error) {
-            res.status(500).json({ error: error})
+            res.json({ error: error})
         }
 }
 
