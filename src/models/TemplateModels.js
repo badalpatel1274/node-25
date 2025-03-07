@@ -9,6 +9,9 @@ const templateSchema = new Schema({
     },
     desc:{
         type:String,
+    },
+    previewImg:{
+        type:String
     }
 },{timestamps:true})
 
