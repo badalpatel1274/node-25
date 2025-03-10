@@ -1,7 +1,7 @@
 const { genSaltSync } = require('bcrypt')
 const userModel = require('../models/UserModels')
 const bcrypt = require('bcrypt')
-
+const mailUtil = require('../util/MailUtils')
 
 const addUser = async(req,res)=>{
         const user = await userModel.create(req.body)
@@ -69,6 +69,10 @@ const signUp = async(req,res)=>{
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
         req.body.password = hashedPassword
         const createdUser= await userModel.create(req.body)
+        //send mail 
+        await mailUtil.sendingMail(createdUser.email,"welcome to resume.x","welcome to our world")
+
+        
         res.status(201).json({
                     message:"user creted",
                     data:createdUser

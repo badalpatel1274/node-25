@@ -6,7 +6,7 @@ const formSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        // required: true
     },
     templateId: {
         type: Schema.Types.ObjectId,
@@ -16,6 +16,10 @@ const formSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"Resume",
         // required:true
+    },
+    profilePic:{
+        type:String,
+        
     },
     personal: {
         fullName: {
@@ -88,12 +92,12 @@ const formSchema = new Schema({
     {
         technical: {
             type: [String],
-            required: true
+            // required: true
         },
 
         soft: {
             type: [String],
-            required: true
+            // required: true
         },
         language: {
             type: [String],
