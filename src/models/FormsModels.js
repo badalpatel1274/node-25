@@ -26,6 +26,7 @@ const formSchema = new Schema({
             type: String,
             // required:true
         },
+        
         email: {
             type: String,
             // required:true
@@ -55,7 +56,7 @@ const formSchema = new Schema({
             type: String,
             // required:true
         },
-        year_of_passing: {
+        year: {
             type: Number,
             // required:true
         },
