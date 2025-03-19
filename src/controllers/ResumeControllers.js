@@ -36,4 +36,16 @@ const getIdByResume = async(req,res)=>{
     }
 }
 
-module.exports ={addResume,getIdByResume}
+const deleteResume = async (req,res)=>{
+    try {
+        const deletedResume = await templateModel.findByIdAndDelete(req.params.id)
+        res.json({
+            message:"Resume Was Deleted !!",
+            data:deletedResume
+        })
+    } catch (error) {
+        res.status(500).json({error})
+    }
+}
+
+module.exports ={addResume,getIdByResume,deleteResume}

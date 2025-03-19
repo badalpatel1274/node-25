@@ -24,4 +24,30 @@ const getAllTemplate = async(req,res)=>{
         res.status(500).json({error})
     }
 }
-module.exports ={addTemplate,getAllTemplate}
+
+const deleteTemplate = async (req,res)=>{
+    try {
+        const deletedTemplate = await templateModel.findByIdAndDelete(req.params.id)
+        res.json({
+            message:"Template Was Deleted !!",
+            data:deletedTemplate
+        })
+    } catch (error) {
+        res.status(500).json({error})
+    }
+}
+
+const getTemplatebyId = async(req,res)=>{
+    try {
+        const getId = await templateModel.findById(req.params.id)
+        res.json({
+            message:"Template Id is Fetched !!",
+            data:getId
+        })
+    } catch (error) {
+        res.status(500).json({error})
+
+    }
+}
+
+module.exports ={addTemplate,getAllTemplate,deleteTemplate,getTemplatebyId}

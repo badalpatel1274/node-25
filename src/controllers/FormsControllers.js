@@ -144,4 +144,39 @@ const getAllFormDetails = async (req, res) => {
     }
 };
 
-module.exports = { addFormDetails, getAllFormDetails }
+
+const updateForms = async(req,res)=>{
+    try {
+        console.log("Updating Form ID:", req.params.id);
+        
+        const updatedData = await FormsModels.findByIdAndUpdate(req.params.id, req.body, {new:true ,  runValidators: true})
+        console.log("Received Data:", req.body);
+      
+      if (!updatedData) {
+        return res.status(404).json({ message: "Form not found" });
+    }
+      res.json({
+        message:"Updated Sucessfully !!",
+        data:updatedData
+      })
+    } catch (error) {
+        res.status(500).json({"error":error.message})
+
+    }
+}
+
+const getFormsById = async(req,res)=>{
+    try {
+        const getId = await FormsModels.findById(req.params.id)
+        res.json({
+            message:"Form byId is Fetched !!",
+            data:getId
+        })
+    } catch (error) {
+        res.status(500).json({error})
+
+    }
+}
+
+
+module.exports = { addFormDetails, getAllFormDetails ,updateForms , getFormsById }
