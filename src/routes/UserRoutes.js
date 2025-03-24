@@ -7,6 +7,8 @@ route.delete("/user/:id",userConroller.deleteUser)
 route.get("/user/:id",userConroller.getUserId)
 route.post("/signup",userConroller.signUp)
 route.post("/login",userConroller.loginUser )
+route.post("/forgetpassword",userConroller.forgetPassword)
+route.post("/resetpassword",userConroller.resetPassword)
 
 
 module.exports = route

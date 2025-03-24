@@ -26,6 +26,12 @@ const formSchema = new Schema({
             type: String,
             // required:true
         },
+        aboutMe:{
+            type:String
+        },
+        jobTitle:{
+            type:String
+        },
         
         email: {
             type: String,
@@ -68,18 +74,18 @@ const formSchema = new Schema({
 
     experience: 
         {
-            jobtTitle: {
-                type: String,
-                // required:true
-            },
+          
 
             companyName: {
                 type: String,
 
             },
-            year: {
+            companyExp: {
                 type: String,
             },
+            jobDescription:{
+                type:String
+            },  
             projectTitle: {
                 type: String
             },

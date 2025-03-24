@@ -2,6 +2,8 @@ const { genSaltSync } = require('bcrypt')
 const userModel = require('../models/UserModels')
 const bcrypt = require('bcrypt')
 const mailUtil = require('../util/MailUtils')
+const jwt = require('jsonwebtoken')
+const secret = "badal"
 
 const addUser = async(req,res)=>{
         const user = await userModel.create(req.body)
@@ -79,5 +81,60 @@ const signUp = async(req,res)=>{
         })
 }
 
+const forgetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const foundUser = await userModel.findOne({ email });
 
-module.exports = {addUser,getUser,deleteUser,getUserId ,signUp,loginUser}
+        if (!foundUser) {
+            return res.status(404).json({ message: "User not found. Register first..." });
+        }
+
+        // Generate a token with only user ID (not full object)
+        const token = jwt.sign({ _id: foundUser._id }, secret, { expiresIn: '10m' });
+
+        // Reset password URL
+        const url = `http://localhost:5173/resetpassword/${token}`;
+
+        // Email content
+        const mailContent = `
+            <html>
+                <p>Click the link below to reset your password:</p>
+                <a href="${url}">Reset Password</a>
+            </html>`;
+
+        await mailUtil.sendingMail(foundUser.email, "Reset Password", mailContent);
+
+        res.json({ message: "Reset password link sent to your email" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        // Verify token
+        const decoded = jwt.verify(token, secret);
+        if (!decoded._id) {
+            return res.status(400).json({ message: "Invalid or expired token" });
+        }
+
+        // Hash new password
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+
+        // Update password
+        await userModel.findByIdAndUpdate(decoded._id, { password: hashedPassword });
+
+        res.json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
+
+module.exports = {addUser,getUser,deleteUser,getUserId ,signUp,loginUser , forgetPassword, resetPassword}
