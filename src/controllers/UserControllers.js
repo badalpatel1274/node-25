@@ -90,13 +90,10 @@ const forgetPassword = async (req, res) => {
             return res.status(404).json({ message: "User not found. Register first..." });
         }
 
-        // Generate a token with only user ID (not full object)
         const token = jwt.sign({ _id: foundUser._id }, secret, { expiresIn: '10m' });
 
-        // Reset password URL
         const url = `http://localhost:5173/resetpassword/${token}`;
 
-        // Email content
         const mailContent = `
             <html>
                 <p>Click the link below to reset your password:</p>
@@ -116,17 +113,14 @@ const resetPassword = async (req, res) => {
     try {
         const { token, password } = req.body;
 
-        // Verify token
         const decoded = jwt.verify(token, secret);
         if (!decoded._id) {
             return res.status(400).json({ message: "Invalid or expired token" });
         }
 
-        // Hash new password
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
-        // Update password
         await userModel.findByIdAndUpdate(decoded._id, { password: hashedPassword });
 
         res.json({ message: "Password updated successfully" });
