@@ -1,53 +1,80 @@
 const templateModel = require('../models/TemplateModels')
+const multer = require('multer')
+const path = require('path')
 
-const addTemplate = async (req,res)=>{
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // 🔹 Images `uploads/` Folder Me Save Hogi
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+})
+const upload = multer({
+    storage: storage
+}).single("previewImg")
+
+const addTemplate = async (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ error: "File upload failed" });
+        }
 
         try {
-            const savedTemplate =await templateModel.create(req.body)
-            res.json({
-                message:"Template was added...",
-                data:savedTemplate
-            })
-        } catch (error) {
-            res.status(500).json({error})
-        }
-    }
+            console.log("Received Data:", req.body); // 🟢 Debugging
+            console.log("Uploaded File:", req.file); // 🟢 Check if file is received
 
-const getAllTemplate = async(req,res)=>{
+            const { name, desc } = req.body;
+            const previewImg = req.file ? `/uploads/${req.file.filename}` : "";
+
+            const savedTemplate = await templateModel.create({ name, desc, previewImg });
+
+            return res.json({
+                message: "Template was added...",
+                data: savedTemplate,
+            });
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    });
+};
+
+
+const getAllTemplate = async (req, res) => {
     try {
         const getTemplate = await templateModel.find()
         res.json({
-            message:"All Template...",
-            data:getTemplate
+            message: "All Template...",
+            data: getTemplate
         })
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({ error })
     }
 }
 
-const deleteTemplate = async (req,res)=>{
+const deleteTemplate = async (req, res) => {
     try {
         const deletedTemplate = await templateModel.findByIdAndDelete(req.params.id)
         res.json({
-            message:"Template Was Deleted !!",
-            data:deletedTemplate
+            message: "Template Was Deleted !!",
+            data: deletedTemplate
         })
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({ error })
     }
 }
 
-const getTemplatebyId = async(req,res)=>{
+const getTemplatebyId = async (req, res) => {
     try {
         const getId = await templateModel.findById(req.params.id)
         res.json({
-            message:"Template Id is Fetched !!",
-            data:getId
+            message: "Template Id is Fetched !!",
+            data: getId
         })
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({ error })
 
     }
 }
 
-module.exports ={addTemplate,getAllTemplate,deleteTemplate,getTemplatebyId}
+module.exports = { addTemplate, getAllTemplate, deleteTemplate, getTemplatebyId }
