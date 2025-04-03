@@ -28,19 +28,24 @@ const addFormDetails = async (req, res) => {
         console.log("File Received: ", req.file);
         console.log("Request Body: ", req.body);
 
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
+        let profilePicUrl = ""; // Default empty string
+
+        if (req.file) {
+            try {
+                const filePath = path.resolve(req.file.path);
+                console.log("Uploading File to Cloudinary: ", filePath);
+
+                const cloudinaryResponse = await cloudinaryUtil.uploadFileToCloudinary(fs.createReadStream(filePath));
+                console.log("Cloudinary Response: ", cloudinaryResponse);
+
+                profilePicUrl = cloudinaryResponse.secure_url;
+            } catch (error) {
+                console.error("Cloudinary Upload Failed:", error);
+                return res.status(500).json({ error: "Cloudinary file upload failed" });
+            }
         }
 
         try {
-            const filePath = path.resolve(req.file.path);
-            console.log("Uploading File to Cloudinary: ", filePath);
-
-            const cloudinaryResponse = await cloudinaryUtil.uploadFileToCloudinary(fs.createReadStream(filePath));
-            console.log("Cloudinary Response: ", cloudinaryResponse);
-
-            const profilePicUrl = cloudinaryResponse.secure_url;
-
             // 🛠️ Parsing JSON fields manually
             const personal = JSON.parse(req.body.personal);
             const education = JSON.parse(req.body.education);
@@ -50,11 +55,11 @@ const addFormDetails = async (req, res) => {
             const savedInfo = await FormsModels.create({
                 userId: req.body.userId,
                 templateId: req.body.templateId,
-                profilePic: profilePicUrl,
+                profilePic: profilePicUrl,  // Yeh empty string bhi ho sakta hai agar file nahi mili
                 personal: personal,
                 education: education,
-                experience:experience,
-                skills:skills
+                experience: experience,
+                skills: skills
             });
 
             if (!savedInfo._id) {
@@ -72,13 +77,13 @@ const addFormDetails = async (req, res) => {
             await savedInfo.save();
 
             res.status(200).json({
-                message: "Form details and file uploaded successfully",
+                message: "Form details and file (if uploaded) saved successfully",
                 data: savedInfo
             });
 
         } catch (error) {
-            console.error("Cloudinary Upload Failed:", error);
-            res.status(500).json({ error: "Cloudinary file upload failed" });
+            console.error("Error Saving Form Details:", error);
+            res.status(500).json({ error: "Internal Server Error" });
         }
     });
 };
@@ -87,46 +92,6 @@ const addFormDetails = async (req, res) => {
 
 
 
-
-
-//  const addFormDetails = async (req, res) => {
-
-
-//     try {
-//         const savedInfo = await FormsModels.create({
-//             userId: req.body.userId,
-//             templateId: req.body.templateId,
-//             profilePic:req.body.profilePic,
-//             personal: req.body.personal,
-//             education: req.body.education,
-//             experience: req.body.experience,
-//             skills: req.body.skills,
-//         });
-
-//         if (!savedInfo._id) {
-//             return res.status(400).json({ error: "Form not saved correctly" });
-//         }
-
-//         const newResume = new Resume({
-//             userId: savedInfo.userId,
-//             templateId: savedInfo.templateId,
-//             userFormId: savedInfo._id, //Ensure userFormId is assigned
-//         });
-
-//         const savedResume = await newResume.save(); // Save Resume
-
-//         savedInfo.resumeId = savedResume._id;
-//         await savedInfo.save();
-
-//         res.status(200).json({
-//             message: "Form details added successfully",
-//             data: savedInfo,
-//         });
-//     } catch (error) {
-//         console.error("Form Submission Error:", error);
-//         res.status(500).json({ error: error.message });
-//     }
-// };
 
 
 const getAllFormDetails = async (req, res) => {
