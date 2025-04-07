@@ -1,4 +1,5 @@
 const templateModel = require('../models/TemplateModels')
+const logger = require('../util/Logger')
 const multer = require('multer')
 const path = require('path')
 
@@ -28,6 +29,9 @@ const addTemplate = async (req, res) => {
             const previewImg = req.file ? `/uploads/${req.file.filename}` : "";
 
             const savedTemplate = await templateModel.create({ name, desc, previewImg });
+
+           await  logger.emit("activity", { message: "New Template Added", user: "Admin" });
+
 
             return res.json({
                 message: "Template was added...",
@@ -76,5 +80,6 @@ const getTemplatebyId = async (req, res) => {
 
     }
 }
+
 
 module.exports = { addTemplate, getAllTemplate, deleteTemplate, getTemplatebyId }

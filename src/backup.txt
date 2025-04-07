@@ -1,0 +1,75 @@
+app.get("/user",(req,res)=>{
+    console.log("User is Created")
+    res.send("Hello User")
+
+})
+app.get("/",(req,res)=>{
+    console.log("User is Created")
+    res.json({
+        data:"badal",
+        message:"Hello message for user "
+    })
+
+})
+app.get("/employee",(req,res)=>{
+    console.log("User is Created")
+    res.json({ 
+        Employee1:({
+            name:"badal",
+            age:"22",
+            gender:"male",
+            role:"Computer engineering",
+            isActive:"true"
+
+    }),
+        Employee2:({
+            name:"devam",
+            age:"22",
+            gender:"male",
+            role:"Management",
+            isActive:"true"
+
+    }),
+        Employee3:({
+            name:"kartik",
+            age:"22",
+            gender:"male",
+            role:"Computer engineering",
+            isActive:"true"
+
+    }),
+        Employee4:({
+            name:"dadichi",
+            age:"22",
+            gender:"male",
+            role:"Software engineering",
+            isActive:"false"
+
+    }),
+        Employee5:({
+            name:"kaushal",
+            age:"22",
+            gender:"male",
+            role:"design engineering",
+            isActive:"false"
+
+    }),
+           Employee6:({
+            name:"meet",
+            age:"22",
+            gender:"male",
+            role:"civil engineering",
+            isActive:"true"
+
+    }),
+        Employee7:({
+            name:"krish",
+            age:"22",
+            gender:"male",
+            role:"hr",
+            isActive:"true"
+
+    })
+    })
+
+})

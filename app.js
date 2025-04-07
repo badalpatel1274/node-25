@@ -38,6 +38,10 @@ app.use('/form',formRoutes)
 const resumeRoutes = require('./src/routes/ResumeRoutes')
 app.use(resumeRoutes)
 
+//activity
+const activityRoutes = require('./src/routes/ActivityRoutes')
+app.use(activityRoutes)
+
 app.listen(PORT , ()=>{
     console.log(`server is started on localhost:${PORT}`)
 })

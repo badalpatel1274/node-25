@@ -1,5 +1,6 @@
 const { genSaltSync } = require('bcrypt')
 const userModel = require('../models/UserModels')
+const logger = require('../util/Logger')
 const bcrypt = require('bcrypt')
 const mailUtil = require('../util/MailUtils')
 const jwt = require('jsonwebtoken')
@@ -7,6 +8,7 @@ const secret = "badal"
 
 const addUser = async(req,res)=>{
         const user = await userModel.create(req.body)
+
 
         res.json({
             message:"User is created",
@@ -71,6 +73,12 @@ const signUp = async(req,res)=>{
         const hashedPassword = bcrypt.hashSync(req.body.password, salt);
         req.body.password = hashedPassword
         const createdUser= await userModel.create(req.body)
+
+        
+   await logger.emit("activity",{
+    message: "New User Registered",
+    user : createdUser.email
+})
         //send mail 
         await mailUtil.sendingMail(createdUser.email,"welcome to resume.x","welcome to our world")
 
@@ -130,5 +138,34 @@ const resetPassword = async (req, res) => {
     }
 };
 
-
-module.exports = {addUser,getUser,deleteUser,getUserId ,signUp,loginUser , forgetPassword, resetPassword}
+const getWeeklyUserStats = async (req, res) => {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 6); // last 7 days
+    startDate.setHours(0, 0, 0, 0);
+  
+    const endDate = new Date();
+endDate.setHours(23, 59, 59, 999);
+    try {
+      const data = await userModel.aggregate([
+        {
+            $match: {
+                createdAt: { $gte: startDate, $lte: endDate }
+              }
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                count: { $sum: 1 }
+              }
+        },
+        { $sort: { _id: 1 } }
+      ]);
+  
+      res.json(data);
+    } catch (error) {
+        console.log("Error in weekly user stats:", error);
+      res.status(500).json({ message: "Error getting weekly user stats", error });
+    }
+  };
+  
+module.exports = {addUser,getUser,deleteUser,getUserId ,signUp,loginUser , forgetPassword, resetPassword , getWeeklyUserStats}

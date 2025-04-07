@@ -9,6 +9,7 @@ route.post("/signup",userConroller.signUp)
 route.post("/login",userConroller.loginUser )
 route.post("/forgetpassword",userConroller.forgetPassword)
 route.post("/resetpassword",userConroller.resetPassword)
+route.get("/users/weekly",userConroller.getWeeklyUserStats)
 
 
 module.exports = route
