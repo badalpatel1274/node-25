@@ -10,6 +10,11 @@ route.post("/login",userConroller.loginUser )
 route.post("/forgetpassword",userConroller.forgetPassword)
 route.post("/resetpassword",userConroller.resetPassword)
 route.get("/users/weekly",userConroller.getWeeklyUserStats)
+route.put("/user/update/:id",userConroller.updateUser)
+route.delete("/user/deleteaccount/:id", userConroller.deleteAccount);
+
+
+
 
 
 module.exports = route
