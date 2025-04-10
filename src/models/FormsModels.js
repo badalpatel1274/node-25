@@ -40,20 +40,23 @@ const formSchema = new Schema(
       },
     ],
 
-    experience: [
-      {
-        companyName: { type: String },
-        companyExp: { type: String },
-        jobDescription: { type: String },
+    experience: {
+      
+        items: [
+          {
+            companyName: { type: String },
+            companyExp: { type: String },
+            jobDescription: { type: String },
+          },
+        ],
         projects: [
           {
             title: { type: String },
             description: { type: String },
           },
         ],
-        totalExperience: { type: String },
+      
       },
-    ],
 
     skills: {
       technical: { type: [String], required: true },
