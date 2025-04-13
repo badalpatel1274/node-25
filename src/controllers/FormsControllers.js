@@ -110,25 +110,55 @@ const getAllFormDetails = async (req, res) => {
 };
 
 
-const updateForms = async(req,res)=>{
-    try {
-        console.log("Updating Form ID:", req.params.id);
-        
-        const updatedData = await FormsModels.findByIdAndUpdate(req.params.id, req.body, {new:true ,  runValidators: true})
-        console.log("Received Data:", req.body);
-      
-      if (!updatedData) {
-        return res.status(404).json({ message: "Form not found" });
-    }
-      res.json({
-        message:"Updated Sucessfully !!",
-        data:updatedData
-      })
-    } catch (error) {
-        res.status(500).json({"error":error.message})
+const updateForms = async (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: err.message });
+        }
 
-    }
-}
+        try {
+            console.log("Updating Form ID:", req.params.id);
+            console.log("Received Body:", req.body);
+            console.log("Received File:", req.file);
+
+            let updatedData = { ...req.body };
+
+            // If a new image file is uploaded, update the profilePic
+            if (req.file) {
+                const filePath = path.resolve(req.file.path);
+                console.log("Uploading new profile pic to Cloudinary:", filePath);
+
+                const cloudinaryResponse = await cloudinaryUtil.uploadFileToCloudinary(fs.createReadStream(filePath));
+                updatedData.profilePic = cloudinaryResponse.secure_url;
+            }
+
+            // If fields like 'personal', 'education', etc. come as strings, parse them
+            if (typeof updatedData.personal === "string") updatedData.personal = JSON.parse(updatedData.personal);
+            if (typeof updatedData.education === "string") updatedData.education = JSON.parse(updatedData.education);
+            if (typeof updatedData.experience === "string") updatedData.experience = JSON.parse(updatedData.experience);
+            if (typeof updatedData.skills === "string") updatedData.skills = JSON.parse(updatedData.skills);
+
+            const updatedForm = await FormsModels.findByIdAndUpdate(req.params.id, updatedData, {
+                new: true,
+                runValidators: true
+            });
+
+            if (!updatedForm) {
+                return res.status(404).json({ message: "Form not found" });
+            }
+
+            res.json({
+                message: "Form updated successfully, including image if uploaded",
+                data: updatedForm
+            });
+
+        } catch (error) {
+            console.error("Error updating form:", error);
+            res.status(500).json({ error: error.message });
+        }
+    });
+};
+
 
 const getFormsById = async(req,res)=>{
     try {
